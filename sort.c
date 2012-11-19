@@ -70,9 +70,6 @@ void mergesort_m(int *arr, size_t count)
 
     pthread_mutex_destroy(&info.mutex);
     pthread_cond_destroy(&info.cond);
-
-    for (int t = 0; t < threads; t++)
-        pthread_cancel(thread[t]);
 }
 
 int get_section(mergeinfo_t *info, int **lp, int **rp, int **ep, int c)
