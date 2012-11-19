@@ -150,7 +150,8 @@ void *mergesort_t(void *vinfo)
             merge_i(l,r,e);
         }
     }
-    free(buff);
+    if (buff)
+        free(buff);
     return NULL; // don't use pthread_exit(), this can be called from main thread
 }
 
