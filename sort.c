@@ -35,7 +35,7 @@ void mergesort_ii(int *arr, size_t count)
             if (len <= 8)
                 insertionsort(l, e-l);
             else
-                merge_i(l, r, e);
+                merge_i(l, r, e, NULL);
         }
         len <<= 1;
     } while (len < count);
@@ -188,7 +188,7 @@ void *mergesort_t(void *vinfo)
     return NULL; // don't use pthread_exit(), this might be called from main thread
 }
 
-void merge_i(int *l, int *r, int *e) // left, right, end
+void merge_i(int *l, int *r, int *e, __attribute__((unused)) int *unused) // left, right, end
 {   // Merge of one section of the array in place
     while (l < r && r < e)
     {
