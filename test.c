@@ -13,6 +13,7 @@ int *arr_sorted;
 int *arr_unsorted;
 
 void (*fn_sort)(int *, size_t) = NULL;
+void (*fn_merge)(int *, int *, int *, int *) = NULL;
 
 void arr_shuffle(int *arr, size_t len)
 {
@@ -113,21 +114,7 @@ int test_many_unsorted()
     return result;
 }
 
-int test_merge_i()
-{
-    int arr2[] = {9,9,9, 1,2,3,4,5,6,7,8,  0,0,0}
-      , arr1[] = {9,9,9, 1,3,5,7, 2,4,6,8, 0,0,0};
-#ifdef DEBUG
-    printf("\n    Before: "); arr_print(arr1, 14);
-#endif
-    merge_i(&arr1[3], &arr1[7], &arr1[11]);
-#ifdef DEBUG
-    printf("\n    After: "); arr_print(arr1, 14);
-#endif
-    return !memcmp(arr1, arr2, 14*sizeof(int));
-}
-
-int test_merge_b()
+int test_merge()
 {
     int section = 1, length = 8;
     int arr1[] = {0,9,0,9,0,9,0,9, 1,3,5,7,2,4,6,8, 0,9,0,9,0,9,0,9};
@@ -139,7 +126,7 @@ int test_merge_b()
     int *l = &arr1[section*length];
     int *r = &arr1[section*length + length/2];
     int *e = &arr1[(section+1)*length];
-    merge_b(l, r, e, arr3);
+    fn_merge(l, r, e, arr3);
 #ifdef DEBUG
     printf("\n    After: "); arr_print(arr1, 24);
 #endif
@@ -167,8 +154,7 @@ test_t sorttests[] = {
 };
 
 test_t mergetests[] = {
-    TEST(test_merge_i),
-    TEST(test_merge_b),
+    TEST(test_merge),
 };
 
 void run_tests(test_t tests[], size_t count)
@@ -204,7 +190,12 @@ int main(int argc, char *argv[])
     // printf("Test sorting with insertionsort\n");
     // run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
 
-    printf("Test merging\n");
+    fn_merge = merge_i;
+    printf("Test in-place merging\n");
+    run_tests(mergetests, sizeof(mergetests)/sizeof(test_t));
+
+    fn_merge = merge_b;
+    printf("Test buffered merging\n");
     run_tests(mergetests, sizeof(mergetests)/sizeof(test_t));
 
     // fn_sort = mergesort_ii;
