@@ -220,6 +220,10 @@ int main(int argc, char *argv[])
     // printf("Test sorting with iterative mergesort\n");
     // run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
 
+    fn_sort = mergesort_r;
+    printf("Test sorting with recursive mergesort\n");
+    run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
+
     fn_sort = mergesort_f;
     printf("Test sorting with flat mergesort\n");
     run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));

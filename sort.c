@@ -44,6 +44,33 @@ void mergesort_i(int *arr, size_t count)
     } while (len < count);
 }
 
+void mergesort_r(int *arr, size_t count)
+{
+    if (count <= 8)
+    {
+        insertionsort(arr, count);
+        return;
+    }
+    // sort the subarrays
+    int *l = arr, *r = &arr[count/2]; // left, right
+    int *le = r, *re = &arr[count]; // left end, right end
+    mergesort_r(l, le-l);
+    mergesort_r(r, re-r);
+    // merge them
+    int *buff = malloc(count*sizeof(int));
+    int *b = buff;
+    while (l < le && r < re)
+        *b++ = *r < *l ? *r++ : *l++;
+    // copy the remaining elements
+    while (l < le)
+        *b++ = *l++;
+    while (r < re)
+        *b++ = *r++;
+    // copy the result back to the array
+    memcpy(arr, buff, count*sizeof(int));
+    free(buff);
+}
+
 void mergesort_f(int *arr, size_t count)
 {   // single-threaded merge sort using the thread function
     mergeinfo_t info = MERGEINFO_INITIALIZER(arr, count);

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 void mergesort_i(int *, size_t);
+void mergesort_r(int *, size_t);
 void mergesort_f(int *, size_t);
 void mergesort_m(int *, size_t);
 
