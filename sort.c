@@ -156,25 +156,21 @@ void *mergesort_t(void *vinfo)
 {   // merge sort for one thread
     mergeinfo_t *info = vinfo;
     int *l, *r, *e = NULL, *buff = NULL;
-    // size_t buff_sz = 0;
+    size_t buff_sz = 0;
     while (get_section(info, &l, &r, &e, e != NULL))
     {
         if (e-l <= 8)
             insertionsort(l, e-l);
         else
         {
-            /*
             if ((size_t)(e-l) > buff_sz)
             {
                 buff_sz = e-l;
                 if (buff)
                     free(buff);
                 buff = malloc(buff_sz*sizeof(int));
-                printf("Allocated buffer %p\n", buff);
             }
             merge_b(l, r, e, buff);
-            */
-            merge_i(l,r,e);
         }
     }
     if (buff)
@@ -203,13 +199,13 @@ void merge_b(int *l, int *r, int *e, int *buff)
     // l: left, r: right, le: left end, re: right end
     while (l < le && r < re)
         *b++ = *r < *l ? *r++ : *l++;
-    // copy the remaining elements into buff
-    if (l < le)
-        memmove(b, l, (le-l)*sizeof(int));
-    else
-        memmove(b, r, (re-r)*sizeof(int));
-    // copy the buffer back into the array
-    memmove(arr, buff, (e-arr)*sizeof(int));
+    // copy the remaining elements
+    while (l < le)
+        *b++ = *l++;
+    while (r < re)
+        *b++ = *r++;
+    // copy the result back to the array
+    memcpy(arr, buff, (e-arr)*sizeof(int));
 }
 
 void insertionsort(int *arr, size_t count)
