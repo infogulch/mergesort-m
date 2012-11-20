@@ -22,7 +22,7 @@ void *mergesort_t(void *);
 int arr_issorted(int *, size_t);
 void arr_print(int *, size_t);
 
-void mergesort_i(int *arr, size_t count)
+void mergesort_ii(int *arr, size_t count)
 {   // Iterative and In-place merge sort
     size_t len = 8; // length of each merge
     int *arrend = &arr[count]; // exclusive
@@ -42,6 +42,30 @@ void mergesort_i(int *arr, size_t count)
         }
         len <<= 1;
     } while (len < count);
+}
+
+void mergesort_ib(int *arr, size_t count)
+{   // Iterative and In-place merge sort
+    size_t len = 8; // length of each merge
+    int *arrend = &arr[count]; // exclusive
+    int *b = malloc(count*sizeof(int));
+    do {
+        int *e = arr;
+        while (e < arrend)
+        {
+            int *l = e;
+            int *r = e+len;
+            e += len << 1;
+            if (e > arrend)
+                e = arrend;
+            if (len <= 8)
+                insertionsort(l, e-l);
+            else
+                merge_b(l, r, e, b);
+        }
+        len <<= 1;
+    } while (len < count);
+    free(b);
 }
 
 void mergesort_rr(int *arr, size_t count, int *buff)

@@ -216,9 +216,13 @@ int main(int argc, char *argv[])
     printf("Test merging\n");
     run_tests(mergetests, sizeof(mergetests)/sizeof(test_t));
 
-    // fn_sort = mergesort_i;
-    // printf("Test sorting with iterative mergesort\n");
+    // fn_sort = mergesort_ii;
+    // printf("Test sorting with iterative in-place mergesort\n");
     // run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
+
+    fn_sort = mergesort_ib;
+    printf("Test sorting with iterative buffered mergesort\n");
+    run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
 
     fn_sort = mergesort_r;
     printf("Test sorting with recursive mergesort\n");
