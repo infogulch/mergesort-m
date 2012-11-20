@@ -121,7 +121,7 @@ int test_merge()
     int section = 1, length = 8;
     int arr1[] = {0,9,0,9,0,9,0,9, 1,3,5,7,2,4,6,8, 0,9,0,9,0,9,0,9};
     int arr2[] = {0,9,0,9,0,9,0,9, 1,2,3,4,5,6,7,8, 0,9,0,9,0,9,0,9};
-    int *arr3 = malloc(8*sizeof(int));
+    int *arr3 = malloc(length*sizeof(int));
 #ifdef DEBUG
     printf("\n    Before: "); arr_print(arr1, 24);
 #endif
