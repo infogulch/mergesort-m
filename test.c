@@ -14,12 +14,6 @@ int *arr_unsorted;
 
 void (*fn_sort)(int *, size_t) = NULL;
 
-void arr_copy(int *arr_to, int *arr_fm, size_t len)
-{
-    for (size_t i = 0; i < len; i++)
-        arr_to[i] = arr_fm[i];
-}
-
 void arr_shuffle(int *arr, size_t len)
 {
     for (size_t i = 0; i < len; i++)
@@ -51,7 +45,7 @@ int test_arr_copy()
 {
     int arr1[] = {3,7,2,5};
     int arr2[4];
-    arr_copy(arr2, arr1, 4);
+    memcpy(arr2, arr1, 4*sizeof(int));
     return !memcmp(arr1, arr2, 4*sizeof(int));
 }
 
@@ -67,7 +61,7 @@ int test_arr_shuffle()
 int test_none()
 {
     int *arr = malloc(arr_len*sizeof(int));
-    arr_copy(arr, arr_unsorted, arr_len);
+    memcpy(arr, arr_unsorted, arr_len*sizeof(int));
     fn_sort(arr+50, 0);
     int result = !memcmp(arr, arr_unsorted, arr_len*sizeof(int));
     free(arr);
@@ -77,7 +71,7 @@ int test_none()
 int test_one()
 {
     int *arr = malloc(arr_len*sizeof(int));
-    arr_copy(arr, arr_unsorted, arr_len);
+    memcpy(arr, arr_unsorted, arr_len*sizeof(int));
     fn_sort(arr+50, 1);
     int result = !memcmp(arr, arr_unsorted, arr_len*sizeof(int));
     free(arr);
@@ -95,7 +89,7 @@ int test_two_sorted()
 int test_many_sorted()
 {
     int *arr = malloc(arr_len*sizeof(int));
-    arr_copy(arr, arr_sorted, arr_len);
+    memcpy(arr, arr_sorted, arr_len*sizeof(int));
     fn_sort(arr, arr_len);
     int result = !memcmp(arr, arr_sorted, arr_len*sizeof(int));
     free(arr);
@@ -114,7 +108,7 @@ int test_two_unsorted()
 int test_many_unsorted()
 {
     int *arr = malloc(arr_len*sizeof(int));
-    arr_copy(arr, arr_unsorted, arr_len);
+    memcpy(arr, arr_unsorted, arr_len*sizeof(int));
 #ifdef DEBUG
     printf("    Before: "); arr_print(arr, arr_len);
 #endif
@@ -210,7 +204,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < arr_len; i++)
         arr_sorted[i] = i;
-    arr_copy(arr_unsorted, arr_sorted, arr_len);
+    memcpy(arr_unsorted, arr_sorted, arr_len*sizeof(int));
     srand(0);
     arr_shuffle(arr_unsorted, arr_len);
 
