@@ -44,7 +44,7 @@ void mergesort_i(int *arr, size_t count)
     } while (len < count);
 }
 
-void mergesort_r(int *arr, size_t count)
+void mergesort_rr(int *arr, size_t count, int *buff)
 {
     if (count <= 8)
     {
@@ -54,11 +54,16 @@ void mergesort_r(int *arr, size_t count)
     // sort the subarrays
     int *l = arr, *r = &arr[count/2]; // left, right
     int *le = r, *re = &arr[count]; // left end, right end
-    mergesort_r(l, le-l);
-    mergesort_r(r, re-r);
+    mergesort_rr(l, le-l, buff);
+    mergesort_rr(r, re-r, buff+count/2);
     // merge them
-    int *buff = malloc(count*sizeof(int));
     merge_b(l, r, re, buff);
+}
+
+void mergesort_r(int *arr, size_t count)
+{
+    int *buff = malloc(count*sizeof(int));
+    mergesort_rr(arr, count, buff);
     free(buff);
 }
 
