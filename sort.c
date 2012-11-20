@@ -58,16 +58,7 @@ void mergesort_r(int *arr, size_t count)
     mergesort_r(r, re-r);
     // merge them
     int *buff = malloc(count*sizeof(int));
-    int *b = buff;
-    while (l < le && r < re)
-        *b++ = *r < *l ? *r++ : *l++;
-    // copy the remaining elements
-    while (l < le)
-        *b++ = *l++;
-    while (r < re)
-        *b++ = *r++;
-    // copy the result back to the array
-    memcpy(arr, buff, count*sizeof(int));
+    merge_b(l, r, re, buff);
     free(buff);
 }
 
