@@ -17,9 +17,12 @@ test: test.o $(OBJ)
 	@echo "link $@"
 	$(Q)$(CC) -o $@ $^ $(CFLAGS) $(LFLAGS)
 
+run: test
+	$(Q)./test ${ARGS}
+
 clean:
 	$(Q)rm -f *.o test
 
 grind: test
-	valgrind --leak-check=full --track-origins=yes ./test ${ARGS}
+	$(Q)valgrind --leak-check=full --track-origins=yes ./test ${ARGS}
 
