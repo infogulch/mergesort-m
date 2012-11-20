@@ -158,17 +158,17 @@ test_t arraytests[] = {
 };
 
 test_t sorttests[] = {
-      TEST(test_none)
-    , TEST(test_one)
-    , TEST(test_two_sorted)
-    , TEST(test_many_sorted)
-    , TEST(test_two_unsorted)
-    , TEST(test_many_unsorted)
+    TEST(test_none),
+    TEST(test_one),
+    TEST(test_two_sorted),
+    TEST(test_many_sorted),
+    TEST(test_two_unsorted),
+    TEST(test_many_unsorted),
 };
 
 test_t mergetests[] = {
-      TEST(test_merge_i)
-    , TEST(test_merge_b)
+    TEST(test_merge_i),
+    TEST(test_merge_b),
 };
 
 void run_tests(test_t tests[], size_t count)
