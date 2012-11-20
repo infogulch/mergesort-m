@@ -55,6 +55,8 @@ void mergesort_ib(int *arr, size_t count)
             e += len << 1;
             if (e > arrend)
                 e = arrend;
+            if (r > e)
+                r = e;
             if (len <= 8)
                 insertionsort(l, e-l);
             else
@@ -165,6 +167,8 @@ int get_section(mergeinfo_t *info, int **lp, int **rp, int **ep, int c)
     *ep = &arr[(section+1)*length];
     if (*ep > end)
         *ep = end;
+    if (*rp > *ep)
+        *rp = *ep;
 
 #ifdef DEBUG
     printf("    %d:%d:%d (%d,%d,%d)\n", *lp-arr, *rp-arr, *ep-arr, length, section, sections);
