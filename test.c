@@ -41,14 +41,6 @@ int arr_issorted(int *arr, size_t count)
     return 1;
 }
 
-int test_arr_copy()
-{
-    int arr1[] = {3,7,2,5};
-    int arr2[4];
-    memcpy(arr2, arr1, 4*sizeof(int));
-    return !memcmp(arr1, arr2, 4*sizeof(int));
-}
-
 int test_arr_shuffle()
 {
     int arr1[] = {1,2,3,4,5};
@@ -162,8 +154,7 @@ typedef struct {
 
 #define TEST(x) { #x, x }
 test_t arraytests[] = {
-      TEST(test_arr_copy)
-    , TEST(test_arr_shuffle)
+    TEST(test_arr_shuffle)
 };
 
 test_t sorttests[] = {
