@@ -80,18 +80,22 @@ int test_arr_shuffle()
 
 int test_none()
 {
-    int arr[arr_len];
+    int *arr = malloc(arr_len*sizeof(int));
     arr_copy(arr, arr_unsorted, arr_len);
-    fn_sort(arr, 0);
-    return arr_equals(arr, arr_unsorted, arr_len);
+    fn_sort(arr+50, 0);
+    int result = arr_equals(arr, arr_unsorted, arr_len);
+    free(arr);
+    return result;
 }
 
 int test_one()
 {
-    int arr[arr_len];
+    int *arr = malloc(arr_len*sizeof(int));
     arr_copy(arr, arr_unsorted, arr_len);
-    fn_sort(arr, 1);
-    return arr_equals(arr, arr_unsorted, arr_len);
+    fn_sort(arr+50, 1);
+    int result = arr_equals(arr, arr_unsorted, arr_len);
+    free(arr);
+    return result;
 }
 
 int test_two_sorted()
@@ -104,10 +108,12 @@ int test_two_sorted()
 
 int test_many_sorted()
 {
-    int arr[arr_len];
-    arr_copy(arr, arr_sorted, arr_len);
+    int *arr = malloc(arr_len*sizeof(int));
+    arr_copy(arr, arr_unsorted, arr_len);
     fn_sort(arr, arr_len);
-    return arr_equals(arr, arr_sorted, arr_len);
+    int result = arr_equals(arr, arr_unsorted, arr_len);
+    free(arr);
+    return result;
 }
 
 int test_two_unsorted()
@@ -116,21 +122,12 @@ int test_two_unsorted()
     int arr2[] = {3, 7};
     fn_sort(arr1, 2);
     int result = arr_equals(arr1, arr2, 2);
-    /*
-    if (!result)
-    {
-        printf("Got: ");
-        arr_print(arr1, 2);
-        printf("Should be: ");
-        arr_print(arr2, 2);
-    }
-    */
     return result;
 }
 
 int test_many_unsorted()
 {
-    int arr[arr_len];
+    int *arr = malloc(arr_len*sizeof(int));
     arr_copy(arr, arr_unsorted, arr_len);
 #ifdef DEBUG
     printf("    Before: "); arr_print(arr, arr_len);
@@ -139,7 +136,9 @@ int test_many_unsorted()
 #ifdef DEBUG
     printf("    After: "); arr_print(arr, arr_len);
 #endif
-    return arr_equals(arr, arr_sorted, arr_len);
+    int result = arr_equals(arr, arr_sorted, arr_len);
+    free(arr);
+    return result;
 }
 
 int test_merge_i()
