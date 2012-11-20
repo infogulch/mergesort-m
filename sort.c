@@ -6,17 +6,14 @@
 #include <sort.h>
 
 typedef struct {
-    int *arr;
-    size_t count;
-    size_t layer;
-    size_t section;
-    size_t completed;
+    int *arr, *buff;
+    size_t count, layer, section, completed;
     pthread_mutex_t mutex;
     pthread_cond_t cond;
 } mergeinfo_t;
 
-#define MERGEINFO_INITIALIZER(arr, count) \
-    ((mergeinfo_t){arr, count, 3, 0, 0, PTHREAD_MUTEX_INITIALIZER, PTHREAD_COND_INITIALIZER})
+#define MERGEINFO_INITIALIZER(arr, buff, count) \
+    ((mergeinfo_t){arr, buff, count, 3, 0, 0, PTHREAD_MUTEX_INITIALIZER, PTHREAD_COND_INITIALIZER})
 
 void *mergesort_t(void *);
 int arr_issorted(int *, size_t);
@@ -45,7 +42,7 @@ void mergesort_ii(int *arr, size_t count)
 }
 
 void mergesort_ib(int *arr, size_t count)
-{   // Iterative and In-place merge sort
+{   // Iterative and buffered merge sort
     size_t len = 8; // length of each merge
     int *arrend = &arr[count]; // exclusive
     int *b = malloc(count*sizeof(int));
@@ -92,14 +89,17 @@ void mergesort_r(int *arr, size_t count)
 }
 
 void mergesort_s(int *arr, size_t count)
-{   // single-threaded merge sort using the thread function
-    mergeinfo_t info = MERGEINFO_INITIALIZER(arr, count);
+{   // single-threaded buffered merge sort using the thread function
+    int *buff = malloc(count*sizeof(int));
+    mergeinfo_t info = MERGEINFO_INITIALIZER(arr, buff, count);
     mergesort_t(&info);
+    free(buff);
 }
 
 void mergesort_m(int *arr, size_t count)
-{
-    mergeinfo_t info = MERGEINFO_INITIALIZER(arr, count);
+{   // multi-threaded buffered merge sort
+    int *buff = malloc(count*sizeof(int));
+    mergeinfo_t info = MERGEINFO_INITIALIZER(arr, buff, count);
     int threads = 3; // turn into parameter + sanity check
     pthread_t thread[threads];
     pthread_attr_t attr;
@@ -117,6 +117,7 @@ void mergesort_m(int *arr, size_t count)
 
     pthread_mutex_destroy(&info.mutex);
     pthread_cond_destroy(&info.cond);
+    free(buff);
 }
 
 int get_section(mergeinfo_t *info, int **lp, int **rp, int **ep, int c)
@@ -175,26 +176,15 @@ int get_section(mergeinfo_t *info, int **lp, int **rp, int **ep, int c)
 void *mergesort_t(void *vinfo)
 {   // merge sort for one thread
     mergeinfo_t *info = vinfo;
-    int *l, *r, *e = NULL, *buff = NULL;
-    size_t buff_sz = 0;
+    int *l, *r, *e = NULL, *buff = info->buff, *arr = info->arr;
     while (get_section(info, &l, &r, &e, e != NULL))
     {
+        int *b = buff + (l-arr);
         if (e-l <= 8)
             insertionsort(l, e-l);
         else
-        {
-            if ((size_t)(e-l) > buff_sz)
-            {
-                buff_sz = e-l;
-                if (buff)
-                    free(buff);
-                buff = malloc(buff_sz*sizeof(int));
-            }
-            merge_b(l, r, e, buff);
-        }
+            merge_b(l, r, e, b);
     }
-    if (buff)
-        free(buff);
     return NULL; // don't use pthread_exit(), this might be called from main thread
 }
 
