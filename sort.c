@@ -5,12 +5,16 @@
 
 #include <sort.h>
 
-typedef struct {
+typedef struct { // mergeinfo_t
     int *arr, *buff;
     size_t count, layer, section, completed;
     pthread_mutex_t mutex;
     pthread_cond_t cond;
 } mergeinfo_t;
+
+typedef struct { // rmergeinfo_t
+    int *l, *r, *e, *b, t;
+} rmergeinfo_t;
 
 #define MERGEINFO_INITIALIZER(arr, buff, count) \
     ((mergeinfo_t){arr, buff, count, 3, 0, 0, PTHREAD_MUTEX_INITIALIZER, PTHREAD_COND_INITIALIZER})
@@ -90,6 +94,37 @@ void mergesort_r(int *arr, size_t count)
     free(buff);
 }
 
+void *mergesort_rrm(void *vinfo)
+{
+    rmergeinfo_t *info = vinfo;
+    if (info->e - info->l <= 8)
+    {
+        insertionsort(info->l, info->e-info->l);
+        return NULL;
+    }
+    pthread_t lthread = 0;
+    rmergeinfo_t left = {info->l, info->l + (info->r - info->l)/2, info->r, info->b, info->t/2}
+              , right = {info->r, info->r + (info->e - info->r)/2, info->e, info->b + (info->r - info->l), info->t/2};
+    if (info->t > 1) // split off the left side to it's own thread
+        pthread_create(&lthread, NULL, mergesort_rrm, &left);
+    else
+        mergesort_rrm(&left);
+    mergesort_rrm(&right); // take the right side either way
+    if (lthread)
+        pthread_join(lthread, NULL);
+    // merge them
+    merge_b(info->l, info->r, info->e, info->b);
+    return NULL;
+}
+
+void mergesort_rm(int *arr, size_t count)
+{   // recursive, multithreaded mergesort
+    int *buff = malloc(count*sizeof(int));
+    rmergeinfo_t info = {arr, arr+count/2, arr+count, buff, 2};
+    mergesort_rrm(&info);
+    free(buff);
+}
+
 void mergesort_s(int *arr, size_t count)
 {   // single-threaded buffered merge sort using the thread function
     int *buff = malloc(count*sizeof(int));
@@ -102,7 +137,7 @@ void mergesort_m(int *arr, size_t count)
 {   // multi-threaded buffered merge sort
     int *buff = malloc(count*sizeof(int));
     mergeinfo_t info = MERGEINFO_INITIALIZER(arr, buff, count);
-    int threads = 3; // turn into parameter + sanity check
+    int threads = 2; // turn into parameter + sanity check
     pthread_t thread[threads];
     pthread_attr_t attr;
 

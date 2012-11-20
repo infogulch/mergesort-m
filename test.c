@@ -181,6 +181,7 @@ int main(int argc, char *argv[])
     arr_sorted = malloc(arr_len*sizeof(int));
     arr_unsorted = malloc(arr_len*sizeof(int));
 
+    printf("Generating sorted and shuffled array for testing...\n");
     for (int i = 0; i < arr_len; i++)
         arr_sorted[i] = i;
     memcpy(arr_unsorted, arr_sorted, arr_len*sizeof(int));
@@ -212,13 +213,17 @@ int main(int argc, char *argv[])
     printf("Test sorting with recursive mergesort\n");
     run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
 
-    fn_sort = mergesort_s;
-    printf("Test sorting with single-threaded mergesort\n");
+    fn_sort = mergesort_rm;
+    printf("Test sorting with multithreaded recursive mergesort\n");
     run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
 
-    fn_sort = mergesort_m;
-    printf("Test sorting with multithreaded mergesort\n");
-    run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
+    // fn_sort = mergesort_s;
+    // printf("Test sorting with single-threaded iterative mergesort\n");
+    // run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
+
+    // fn_sort = mergesort_m;
+    // printf("Test sorting with multithreaded iterative mergesort\n");
+    // run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
 
     printf("Done!\n");
 

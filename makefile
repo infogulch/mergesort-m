@@ -26,3 +26,6 @@ clean:
 grind: test
 	$(Q)valgrind --leak-check=full --track-origins=yes ./test ${ARGS}
 
+gdb: test
+	$(Q)gdb --args ./test ${ARGS}
+
