@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-I. -std=c99 -Wall -Wextra -ggdb -fms-extensions -pthread
+CFLAGS=-I. -std=c99 -Wall -Wextra -O2 -fms-extensions -pthread
 LFLAGS=-lm
 Q=@
 
