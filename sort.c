@@ -199,18 +199,17 @@ void merge_i(int *l, int *r, int *e) // left, right, end
 
 void merge_b(int *l, int *r, int *e, int *buff)
 {   // Merge a section of the array using a buffer as temp storage
-    int *b = buff, *ls = l, *rs = r, *f;
-    while (l < rs && r < e)
-        *b++ = *r > *l ? *l++ : *r++;
-    size_t x;
-    if (l != rs)
-        f = l, x = rs-l;
-    else
-        f = r, x = e-r;
+    int *b = buff, *arr = l, *le = r, *re = e;
+    // l: left, r: right, le: left end, re: right end
+    while (l < le && r < re)
+        *b++ = *r < *l ? *r++ : *l++;
     // copy the remaining elements into buff
-    memmove(b, f, x*sizeof(int));
+    if (l < le)
+        memmove(b, l, (le-l)*sizeof(int));
+    else
+        memmove(b, r, (re-r)*sizeof(int));
     // copy the buffer back into the array
-    memmove(ls, buff, (e-ls)*sizeof(int)); 
+    memmove(arr, buff, (e-arr)*sizeof(int));
 }
 
 void insertionsort(int *arr, size_t count)
