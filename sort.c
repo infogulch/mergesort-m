@@ -156,7 +156,7 @@ void *mergesort_t(void *vinfo)
 {   // merge sort for one thread
     mergeinfo_t *info = vinfo;
     int *l, *r, *e = NULL, *buff = NULL;
-    size_t buff_sz = 0;
+    // size_t buff_sz = 0;
     while (get_section(info, &l, &r, &e, e != NULL))
     {
         if (e-l <= 8)
