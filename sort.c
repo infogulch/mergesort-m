@@ -23,7 +23,7 @@ int arr_issorted(int *, size_t);
 void arr_print(int *, size_t);
 
 void mergesort_i(int *arr, size_t count)
-{
+{   // Iterative and In-place merge sort
     size_t len = 8; // length of each merge
     int *arrend = &arr[count]; // exclusive
     do {
@@ -45,7 +45,7 @@ void mergesort_i(int *arr, size_t count)
 }
 
 void mergesort_f(int *arr, size_t count)
-{
+{   // single-threaded merge sort using the thread function
     mergeinfo_t info = MERGEINFO_INITIALIZER(arr, count);
     mergesort_t(&info);
 }
@@ -73,7 +73,7 @@ void mergesort_m(int *arr, size_t count)
 }
 
 int get_section(mergeinfo_t *info, int **lp, int **rp, int **ep, int c)
-{
+{   // allocates one section of the array for use by a thread
     size_t layer, length, sections, section, completed, count = info->count;
     int *arr = info->arr, *end = &arr[info->count];
 
@@ -126,7 +126,7 @@ int get_section(mergeinfo_t *info, int **lp, int **rp, int **ep, int c)
 }
 
 void *mergesort_t(void *vinfo)
-{
+{   // merge sort for one thread
     mergeinfo_t *info = vinfo;
     int *l, *r, *e = NULL, *buff = NULL;
     size_t buff_sz = 0;
@@ -152,7 +152,7 @@ void *mergesort_t(void *vinfo)
     }
     if (buff)
         free(buff);
-    return NULL; // don't use pthread_exit(), this can be called from main thread
+    return NULL; // don't use pthread_exit(), this might be called from main thread
 }
 
 void merge_i(int *l, int *r, int *e) // left, right, end
@@ -171,18 +171,18 @@ void merge_i(int *l, int *r, int *e) // left, right, end
 }
 
 void merge_b(int *l, int *r, int *e, int *buff)
-{   // Merge a section of the array with a buffer.
+{   // Merge a section of the array using a buffer as temp storage
     int *b = buff, *ls = l, *rs = r, *f;
     while (l < rs && r < e)
         *b++ = *r > *l ? *l++ : *r++;
     size_t x;
-    if (l != rs) // copy the remaining elements into buff
+    if (l != rs)
         f = l, x = rs-l;
     else
         f = r, x = e-r;
-    // printf("Moving %d items from %p to %p\n", x, f, b);
+    // copy the remaining elements into buff
     memmove(b, f, x*sizeof(int));
-    // printf("Moving %d items from %p to %p\n", e-ls, buff, ls);
+    // copy the buffer back into the array
     memmove(ls, buff, (e-ls)*sizeof(int)); 
 }
 
