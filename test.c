@@ -96,9 +96,10 @@ int test_one()
 
 int test_two_sorted()
 {
-    int arr[] = {3, 7};
-    fn_sort(arr, 2);
-    return arr_equals(arr, arr, 2);
+    int arr1[] = {3, 7};
+    int arr2[] = {3, 7};
+    fn_sort(arr1, 2);
+    return arr_equals(arr1, arr2, 2);
 }
 
 int test_many_sorted()
