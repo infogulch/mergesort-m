@@ -6,7 +6,7 @@
 void mergesort_ii(int *, size_t);
 void mergesort_ib(int *, size_t);
 void mergesort_r(int *, size_t);
-void mergesort_f(int *, size_t);
+void mergesort_s(int *, size_t);
 void mergesort_m(int *, size_t);
 
 void merge_i(int *, int *, int *);

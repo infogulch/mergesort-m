@@ -91,7 +91,7 @@ void mergesort_r(int *arr, size_t count)
     free(buff);
 }
 
-void mergesort_f(int *arr, size_t count)
+void mergesort_s(int *arr, size_t count)
 {   // single-threaded merge sort using the thread function
     mergeinfo_t info = MERGEINFO_INITIALIZER(arr, count);
     mergesort_t(&info);

@@ -228,8 +228,8 @@ int main(int argc, char *argv[])
     printf("Test sorting with recursive mergesort\n");
     run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
 
-    fn_sort = mergesort_f;
-    printf("Test sorting with flat mergesort\n");
+    fn_sort = mergesort_s;
+    printf("Test sorting with single-threaded mergesort\n");
     run_tests(sorttests, sizeof(sorttests)/sizeof(test_t));
 
     fn_sort = mergesort_m;
