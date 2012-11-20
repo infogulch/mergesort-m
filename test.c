@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #include <sort.h>
 
@@ -12,14 +13,6 @@ int *arr_sorted;
 int *arr_unsorted;
 
 void (*fn_sort)(int *, size_t) = NULL;
-
-int arr_equals(int *arr1, int *arr2, size_t len)
-{
-    for (size_t i = 0; i < len; i++)
-        if (arr1[i] != arr2[i])
-            return 0;
-    return 1;
-}
 
 void arr_copy(int *arr_to, int *arr_fm, size_t len)
 {
@@ -54,19 +47,12 @@ int arr_issorted(int *arr, size_t count)
     return 1;
 }
 
-int test_arr_equals()
-{
-    int arr1[] = {5,7,9, 1};
-    int arr2[] = {5,7,9,10};
-    return arr_equals(arr1,arr2,3) && !arr_equals(arr1, arr2, 4);
-}
-
 int test_arr_copy()
 {
     int arr1[] = {3,7,2,5};
     int arr2[4];
     arr_copy(arr2, arr1, 4);
-    return arr_equals(arr1, arr2, 4);
+    return !memcmp(arr1, arr2, 4*sizeof(int));
 }
 
 int test_arr_shuffle()
@@ -75,7 +61,7 @@ int test_arr_shuffle()
     int arr2[] = {2,5,4,3,1};
     srand(31337);
     arr_shuffle(arr1, 5);
-    return arr_equals(arr1, arr2, 5);
+    return !memcmp(arr1, arr2, 5*sizeof(int));
 }
 
 int test_none()
@@ -83,7 +69,7 @@ int test_none()
     int *arr = malloc(arr_len*sizeof(int));
     arr_copy(arr, arr_unsorted, arr_len);
     fn_sort(arr+50, 0);
-    int result = arr_equals(arr, arr_unsorted, arr_len);
+    int result = !memcmp(arr, arr_unsorted, arr_len*sizeof(int));
     free(arr);
     return result;
 }
@@ -93,7 +79,7 @@ int test_one()
     int *arr = malloc(arr_len*sizeof(int));
     arr_copy(arr, arr_unsorted, arr_len);
     fn_sort(arr+50, 1);
-    int result = arr_equals(arr, arr_unsorted, arr_len);
+    int result = !memcmp(arr, arr_unsorted, arr_len*sizeof(int));
     free(arr);
     return result;
 }
@@ -103,15 +89,15 @@ int test_two_sorted()
     int arr1[] = {3, 7};
     int arr2[] = {3, 7};
     fn_sort(arr1, 2);
-    return arr_equals(arr1, arr2, 2);
+    return !memcmp(arr1, arr2, 2*sizeof(int));
 }
 
 int test_many_sorted()
 {
     int *arr = malloc(arr_len*sizeof(int));
-    arr_copy(arr, arr_unsorted, arr_len);
+    arr_copy(arr, arr_sorted, arr_len);
     fn_sort(arr, arr_len);
-    int result = arr_equals(arr, arr_unsorted, arr_len);
+    int result = !memcmp(arr, arr_sorted, arr_len*sizeof(int));
     free(arr);
     return result;
 }
@@ -121,7 +107,7 @@ int test_two_unsorted()
     int arr1[] = {7, 3};
     int arr2[] = {3, 7};
     fn_sort(arr1, 2);
-    int result = arr_equals(arr1, arr2, 2);
+    int result = !memcmp(arr1, arr2, 2*sizeof(int));
     return result;
 }
 
@@ -136,7 +122,7 @@ int test_many_unsorted()
 #ifdef DEBUG
     printf("    After: "); arr_print(arr, arr_len);
 #endif
-    int result = arr_equals(arr, arr_sorted, arr_len);
+    int result = !memcmp(arr, arr_sorted, arr_len*sizeof(int));
     free(arr);
     return result;
 }
@@ -152,7 +138,7 @@ int test_merge_i()
 #ifdef DEBUG
     printf("\n    After: "); arr_print(arr1, 14);
 #endif
-    return arr_equals(arr1, arr2, 14);
+    return !memcmp(arr1, arr2, 14*sizeof(int));
 }
 
 int test_merge_b()
@@ -172,7 +158,7 @@ int test_merge_b()
     printf("\n    After: "); arr_print(arr1, 24);
 #endif
     free(arr3);
-    return arr_equals(arr1, arr2, 14);
+    return !memcmp(arr1, arr2, 14*sizeof(int));
 }
 
 typedef struct {
@@ -182,8 +168,7 @@ typedef struct {
 
 #define TEST(x) { #x, x }
 test_t arraytests[] = {
-      TEST(test_arr_equals)
-    , TEST(test_arr_copy)
+      TEST(test_arr_copy)
     , TEST(test_arr_shuffle)
 };
 
