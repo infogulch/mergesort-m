@@ -209,7 +209,8 @@ void merge_i(int *l, int *r, int *e, __attribute__((unused)) int *unused) // lef
 
 void merge_b(int *l, int *r, int *e, int *buff)
 {   // Merge a section of the array using a buffer as temp storage
-    int *b = buff, *arr = l, *le = r, *re = e;
+    int *b = buff, *s = l, *le = r, *re = e;
+    assert(l <=r && r <= e);
     // l: left, r: right, le: left end, re: right end
     while (l < le && r < re)
         *b++ = *r < *l ? *r++ : *l++;
@@ -219,7 +220,7 @@ void merge_b(int *l, int *r, int *e, int *buff)
     while (r < re)
         *b++ = *r++;
     // copy the result back to the array
-    memcpy(arr, buff, (e-arr)*sizeof(int));
+    memcpy(s, buff, (e-s)*sizeof(int));
 }
 
 void insertionsort(int *arr, size_t count)
