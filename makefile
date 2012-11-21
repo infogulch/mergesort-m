@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-I. -std=c99 -Wall -Wextra -ggdb -O2 -fms-extensions -pthread
-LFLAGS=-lm
+LFLAGS=-lm -lrt
 Q=@
 
 # Dependencies:

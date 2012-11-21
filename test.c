@@ -1,4 +1,5 @@
 #define MAIN
+#define _POSIX_C_SOURCE 200809L
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -164,9 +165,12 @@ void run_tests(test_t tests[], size_t count)
     for (size_t i = 0; i < count; i++)
     {
         printf("  %-20s", tests[i].name);
-        clock_t start = clock();
+        struct timespec start, end;
+        clock_gettime(CLOCK_MONOTONIC, &start);
         const char *result = tests[i].func() ? "pass" : ANSI_COLOR_RED "FAIL" ANSI_RESET;
-        printf(":: %s (%.5fs)\n", result, (double)(clock()-start)/CLOCKS_PER_SEC);
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        double time = (end.tv_sec - start.tv_sec) + (double)(end.tv_nsec - start.tv_nsec)/1E9;
+        printf(":: %s (%.5fs)\n", result, time);
     }
 }
 
